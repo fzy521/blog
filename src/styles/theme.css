@@ -1,0 +1,58 @@
+/* Register design tokens for Tailwind v4 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --font-app: var(--font-pixel);
+}
+
+/* 8-bit pixel fonts */
+@font-face {
+  font-family: "Fusion Pixel";
+  src: url("/fonts/fusion-pixel-12px-monospaced-zh_hans.otf.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-FFFF;
+}
+
+@font-face {
+  font-family: "Fusion Pixel";
+  src: url("/fonts/fusion-pixel-12px-monospaced-latin.otf.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-2E7F;
+}
+
+:root {
+  --font-pixel: "Fusion Pixel", monospace;
+  --font-pixel-heading: var(--font-press-start), "Fusion Pixel", monospace;
+}
+
+/* Light theme — 红白机白 / FC 白天模式 */
+:root,
+[data-theme="light"] {
+  --background: #f8f4e3;
+  --foreground: #1a1c2c;
+  --accent: #d23b3b;
+  --accent-foreground: #fffef2;
+  --muted: #e3dcc0;
+  --muted-foreground: #6d6650;
+  --border: #1a1c2c;
+}
+
+/* Dark theme — 像素夜机厅(默认) */
+[data-theme="dark"] {
+  --background: #0f0f1b;
+  --foreground: #c7d0e0;
+  --accent: #41ff6b;
+  --accent-foreground: #0f0f1b;
+  --muted: #232741;
+  --muted-foreground: #7a84a6;
+  --border: #394060;
+}

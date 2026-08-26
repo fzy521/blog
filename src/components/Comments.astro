@@ -1,0 +1,45 @@
+---
+/**
+ * giscus 评论组件 (基于 GitHub Discussions)
+ *
+ * 启用步骤:
+ * 1. 把博客代码推到 GitHub 公开仓库
+ * 2. 仓库 Settings → General → Features 勾选 Discussions
+ * 3. 安装 giscus App: https://github.com/apps/giscus
+ * 4. 到 https://giscus.app/zh-CN 填写仓库名,获取 data-repo-id 和 data-category-id
+ * 5. 替换下方 GISCUS_CONFIG 的占位值,并把 enabled 改为 true
+ */
+const GISCUS_CONFIG = {
+  enabled: false, // 配置好后改为 true
+  repo: "fanzhiyi/blog", // 你的 GitHub 仓库,格式 "用户名/仓库名"
+  repoId: "YOUR_REPO_ID", // 从 giscus.app 获取
+  category: "Announcements",
+  categoryId: "YOUR_CATEGORY_ID", // 从 giscus.app 获取
+};
+---
+
+{
+  GISCUS_CONFIG.enabled && (
+    <section class="mt-8" aria-label="评论区">
+      <h2 class="text-accent mb-4 text-lg font-bold">💬 评论</h2>
+      <script
+        is:inline
+        src="https://giscus.app/client.js"
+        data-repo={GISCUS_CONFIG.repo}
+        data-repo-id={GISCUS_CONFIG.repoId}
+        data-category={GISCUS_CONFIG.category}
+        data-category-id={GISCUS_CONFIG.categoryId}
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async
+      />
+    </section>
+  )
+}
