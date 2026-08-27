@@ -31,3 +31,6 @@ public/pagefind
 
 # docker compose
 compose.override.yaml
+
+#  macOS 截屏(勿提交到仓库)
+/截屏*.png
