@@ -24,12 +24,12 @@ export default defineAstroPaperConfig({
     showBackButton: true,
     editPost: {
       enabled: true,
-      url: "https://github.com/satnaing/astro-paper/edit/main/",
+      url: "https://github.com/fzy521/blog/edit/main/",
     },
     search: "pagefind",
   },
   socials: [
-    { name: "github",   url: "https://github.com/fanzhiyi" },
+    { name: "github",   url: "https://github.com/fzy521" },
     { name: "mail",     url: "mailto:yourmail@gmail.com" },
   ],
   shareLinks: [
