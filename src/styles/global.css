@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "nes.css/css/nes.css";
+/* NES.css 放进 components 层,防止它自带的 reboot 覆盖 Tailwind utilities */
+@import "nes.css/css/nes.css" layer(components);
 @import "./theme.css";
 @import "./typography.css";
 @import "rehype-callouts/theme/obsidian";
@@ -37,6 +38,11 @@
   /* 代码块保持等宽像素感 */
   code, pre, kbd, samp {
     font-family: "Fusion Pixel", var(--font-google-sans-code), monospace;
+  }
+
+  /* 中文长文阅读行距 */
+  body {
+    line-height: 1.75;
   }
 }
 
@@ -97,4 +103,11 @@
 
 :target {
   scroll-margin-block: 1rem;
+}
+
+/* 覆盖 NES.css reboot 的 <a> 蓝色,让链接继承文字色/主题色 */
+@layer utilities {
+  a {
+    color: inherit;
+  }
 }

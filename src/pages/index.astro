@@ -34,30 +34,33 @@ const homePath = getRelativeLocaleUrl(locale, "");
     class="app-layout my-1"
   >
     <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        <span class="blink-cursor">▮</span> 像素日志
-      </h1>
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+      <div class="my-4 flex flex-wrap items-center gap-x-3 sm:my-8">
+        <h1 class="inline-flex items-center gap-2 text-4xl font-bold sm:text-5xl">
+          <span class="blink-cursor" aria-hidden="true">▮</span>
+          <span>像素日志</span>
+        </h1>
+        <a
+          target="_blank"
+          href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+          class="inline-block"
+          aria-label="RSS Feed"
+          title="RSS Feed"
+        >
+          <IconRss
+            width={20}
+            height={20}
+            class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
+          />
+          <span class="sr-only">RSS Feed</span>
+        </a>
+      </div>
 
       <p>
         🎮 欢迎来到我的 8-bit 小站。这里记录代码、想法,以及一些生活的碎片。
         所有文字都用像素字体渲染,就像坐在一台老式游戏机前。
       </p>
-      <p class="mt-2">
-        PRESS <span class="text-accent font-bold">START</span> TO CONTINUE ▼
+      <p class="mt-2 text-xs break-words sm:text-sm">
+        PRESS <span class="text-accent font-bold">START</span> TO CONTINUE <span class="blink-cursor" aria-hidden="true">▼</span>
       </p>
       {
         socials.length > 0 && (
