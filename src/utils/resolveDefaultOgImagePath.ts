@@ -1,7 +1,11 @@
 import type { ResolvedAstroPaperConfig } from "@/types/config";
 import { getAssetPath } from "./withBase";
 
-const publicFiles = import.meta.glob("/public/*", { eager: false });
+// 只 glob 图片:OG 图必然是图片文件。全量 glob 会把 public/ 下的 css 等文件
+// 拉进 Vite 模块图,经 Tailwind 处理后被当成页面样式注入每个页面。
+const publicFiles = import.meta.glob("/public/*.{jpg,jpeg,png,webp,gif,svg,avif}", {
+  eager: false,
+});
 
 function existsInPublic(filename: string): boolean {
   return `/public/${filename}` in publicFiles;

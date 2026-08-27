@@ -8,6 +8,11 @@
  * 3. 安装 giscus App: https://github.com/apps/giscus
  * 4. 到 https://giscus.app/zh-CN 填写仓库名,获取 data-repo-id 和 data-category-id
  * 5. 替换下方 GISCUS_CONFIG 的占位值,并把 enabled 改为 true
+ *
+ * 样式说明:
+ * 评论区是跨域 iframe,页面 CSS 够不着里面,所以用 giscus 的自定义主题能力,
+ * 加载 public/giscus-pixel-{light,dark}.css(配色/像素字体与全站一致);
+ * 站点明暗切换时通过 postMessage 通知 iframe 换主题。
  */
 const GISCUS_CONFIG = {
   enabled: true, // ⚠️ 还需最后一步: 安装 giscus App → https://github.com/apps/giscus (选择 fzy521/blog)
@@ -22,24 +27,69 @@ const GISCUS_CONFIG = {
   GISCUS_CONFIG.enabled && (
     <section class="mt-8" aria-label="评论区">
       <h2 class="text-accent mb-4 text-lg font-bold">💬 评论</h2>
-      <script
-        is:inline
-        src="https://giscus.app/client.js"
-        data-repo={GISCUS_CONFIG.repo}
-        data-repo-id={GISCUS_CONFIG.repoId}
-        data-category={GISCUS_CONFIG.category}
-        data-category-id={GISCUS_CONFIG.categoryId}
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async
-      />
+      <div id="giscus-container" class="giscus-pixel-frame" />
     </section>
+
+    <script
+      define:vars={{
+        repo: GISCUS_CONFIG.repo,
+        repoId: GISCUS_CONFIG.repoId,
+        category: GISCUS_CONFIG.category,
+        categoryId: GISCUS_CONFIG.categoryId,
+      }}
+    >
+      (function () {
+        const container = document.getElementById("giscus-container");
+        if (!container) return;
+
+        // 自定义像素主题的地址(绝对地址,iframe 跨域加载;本地开发也走线上 CSS)
+        function pixelThemeURL() {
+          const mode =
+            document.documentElement.getAttribute("data-theme") === "dark"
+              ? "dark"
+              : "light";
+          return (
+            "https://fzyblog.vercel.app/giscus-pixel-" + mode + ".css"
+          );
+        }
+
+        // 动态创建 script,以便按当前站点主题设置 data-theme
+        const s = document.createElement("script");
+        s.src = "https://giscus.app/client.js";
+        s.async = true;
+        s.crossOrigin = "anonymous";
+        const attrs = {
+          "data-repo": repo,
+          "data-repo-id": repoId,
+          "data-category": category,
+          "data-category-id": categoryId,
+          "data-mapping": "pathname",
+          "data-strict": "0",
+          "data-reactions-enabled": "1",
+          "data-emit-metadata": "0",
+          "data-input-position": "top",
+          "data-theme": pixelThemeURL(),
+          "data-lang": "zh-CN",
+          "data-loading": "lazy",
+        };
+        for (const [key, value] of Object.entries(attrs)) {
+          s.setAttribute(key, value);
+        }
+        container.appendChild(s);
+
+        // 监听 <html data-theme> 变化(手动切换 / 跟随系统),同步给 giscus
+        new MutationObserver(() => {
+          const frame = document.querySelector("iframe.giscus-frame");
+          if (!frame || !frame.contentWindow) return;
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: pixelThemeURL() } } },
+            "https://giscus.app"
+          );
+        }).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+      })();
+    </script>
   )
 }
