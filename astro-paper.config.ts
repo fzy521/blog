@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://blog-3pqr4k6gr-fan-e81c.vercel.app/",
+    url: "https://blog-two-indol-75.vercel.app/",
     title: "像素日志",
     description: "一个 8-bit 风格的个人博客,记录技术与生活。",
     author: "fanzhiyi",
