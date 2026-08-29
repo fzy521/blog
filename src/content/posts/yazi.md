@@ -1,5 +1,5 @@
 ---
-pubDatetime: 2026-08-29T21:00:00+08:00
+pubDatetime: 2026-08-29T11:00:00+08:00
 title: Yazi 入门:把文件管理搬回终端
 featured: false
 draft: false
