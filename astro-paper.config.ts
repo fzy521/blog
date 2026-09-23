@@ -2,9 +2,9 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://fzyblog.vercel.app/",
-    title: "像素日志",
-    description: "一个 8-bit 风格的个人博客,记录技术与生活。",
+    url: "https://zhiyi.fan/",
+    title: "志异-凡",
+    description: "凡人志异——记录代码、技术与生活里的寻常与不寻常,8-bit 像素风渲染。",
     author: "fanzhiyi",
     profile: "",
     ogImage: "default-og.jpg",
