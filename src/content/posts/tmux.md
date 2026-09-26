@@ -1,5 +1,6 @@
 ---
 pubDatetime: 2026-09-26T17:00:00+08:00
+modDatetime: 2026-09-26T22:45:00+08:00
 title: tmux 使用指南:让 OpenCode 不怕关窗断线
 featured: false
 draft: false
@@ -57,26 +58,63 @@ alias tk='tmux new -A -s work'
 
 **前缀键**。上面出现的 `Ctrl+B` 是 tmux 的前缀键(下文记作 `C-b`):tmux 的所有快捷键都先按 `C-b`、松开、再按功能键。这个"两段式"是上手第一道坎,习惯之后反而是优点——普通按键全部直通程序,tmux 永远不和你抢键。
 
-## 窗口与窗格:给 agent 摆工位
+## 常用操作速查
 
-长跑 agent 最顺手的布局是:一边 OpenCode,一边普通 shell。在 OpenCode 的窗格里按 `C-b %`,右边分出一个新窗格,跑 `git diff`、测试、日志,互不打扰。
+长跑 agent 最顺手的布局是:一边 OpenCode,一边普通 shell。在 OpenCode 的窗格里按 `C-b %`,右边分出一个新窗格,跑 `git diff`、测试、日志,互不打扰。我的习惯是一个会话一个项目:window 1 跑 OpenCode(左右分屏,右边 shell),window 2 跑 dev server,window 3 丢零碎命令。
 
-在用的按键:
+日常在用的操作,按会话 / 窗口 / 窗格 / 复制模式四组列全(键位都对过本机 3.7 的默认值):
+
+**会话**
+
+| 操作 | 按键 / 命令 | 说明 |
+| --- | --- | --- |
+| 新建 / 接回 | `tmux new -A -s work` | 有则 attach,没有则新建 |
+| 分离 | `C-b d` | 程序继续在后台跑 |
+| 会话列表 | `tmux ls`,或 `C-b s` | `C-b s` 在 tmux 里直接切 |
+| 重命名 | `C-b $` | |
+| 关闭 | `tmux kill-session -t work` | 在会话里敲这条也行,会连你一起踢出去 |
+| 全部关闭 | `tmux kill-server` | 所有会话一次清掉 |
+| 后台新建 | `tmux new -d -s logs` | 不立刻进入,脚本里重建现场用 |
+
+**窗口**
+
+| 操作 | 按键 | 说明 |
+| --- | --- | --- |
+| 新建 | `C-b c` | |
+| 切换 | `C-b n` / `C-b p` / `C-b l` | 下一个 / 上一个 / 回到刚离开的那个 |
+| 按编号跳 | `C-b 0` … `C-b 9` | |
+| 树形选择器 | `C-b w` | 会话和窗口一屏选完,带预览 |
+| 搜窗口 | `C-b f` | 按标题或内容找 |
+| 重命名 | `C-b ,` | |
+| 关闭 | `C-b &` | 会问一句确认 |
+
+**窗格**
 
 | 操作 | 按键 | 说明 |
 | --- | --- | --- |
 | 左右分屏 | `C-b %` | 新窗格在右边 |
 | 上下分屏 | `C-b "` | 新窗格在下方 |
-| 切窗格 | `C-b 方向键` | 按方向跳;`C-b o` 循环 |
-| 临时放大 | `C-b z` | 再按一次还原。看长 diff 时把 OpenCode 拉满,最顺手的一个键 |
-| 调整大小 | `C-b Ctrl+方向键` | 开鼠标后也可以直接拖边框 |
-| 关窗格 | `C-b x` | 会问一句确认 |
-| 新建窗口 | `C-b c` | 整屏新标签页 |
-| 切窗口 | `C-b n` / `C-b p` | 下一个 / 上一个;`C-b w` 树形选择器,session 和 window 一起选 |
-| 重命名 | `C-b ,` | 窗口;`C-b $` 是会话 |
-| 分离 | `C-b d` | 拔显示器 |
+| 切换 | `C-b 方向键` | `C-b o` 循环;`C-b q` 闪现窗格编号 |
+| 临时放大 | `C-b z` | 再按还原。看长 diff 时把 OpenCode 拉满,最顺手的一个键 |
+| 调整大小 | `C-b Ctrl+方向键` | 开鼠标后直接拖边框也行 |
+| 交换位置 | `C-b {` / `C-b }` | |
+| 拆成独立窗口 | `C-b !` | 窗格长大了,给它转正 |
+| 轮换布局 | `C-b Space` | 几种等分方案之间切 |
+| 关闭 | `C-b x` | 会问一句确认 |
 
-我的习惯是一个会话一个项目:window 1 跑 OpenCode(左右分屏,右边 shell),window 2 跑 dev server,window 3 丢零碎命令。`C-b w` 一屏看完所有会话和窗口。
+**复制模式**(默认 emacs 键位)
+
+`C-b [` 进入,`q` 退出;开鼠标后滚轮会自动进。
+
+| 操作 | 按键 | 说明 |
+| --- | --- | --- |
+| 移动 / 翻页 | 方向键,`PgUp` / `PgDn` | |
+| 开始选中 | `Ctrl+Space` | 在起点按,移到终点再复制 |
+| 复制 | `⌥W` | 复制并退出;鼠标拖选松开同样生效 |
+| 粘贴 | `C-b ]` | 最近一条;`C-b =` 打开缓冲区列表挑历史条目 |
+| 搜索 | `Ctrl+S` / `Ctrl+R` | 增量搜索,向下 / 向上 |
+
+习惯 vi 键位的话,配置里加 `set -g mode-keys vi`,选中 / 复制变成 `v` / `y`。
 
 ## 在 tmux 里用 OpenCode 的四个具体问题
 
@@ -100,7 +138,7 @@ bind C-Space send-prefix
 set -g history-limit 50000
 ```
 
-注意这只管普通 shell 窗格的回滚。OpenCode 这类全屏 TUI 自己管理消息列表,翻它的会话历史用自带按键:`Ctrl+Alt+U` / `Ctrl+Alt+D` 半页滚动,`Ctrl+G` / `Ctrl+Alt+G` 跳到会话开头 / 末尾。tmux 的 copy mode(`C-b [` 进入,像 vim 一样移动,`q` 退出)在全屏 TUI 窗格里翻不出有意义的东西,它的用武之地是 shell 窗格。
+注意这只管普通 shell 窗格的回滚。OpenCode 这类全屏 TUI 自己管理消息列表,翻它的会话历史用自带按键:`Ctrl+Alt+U` / `Ctrl+Alt+D` 半页滚动,`Ctrl+G` / `Ctrl+Alt+G` 跳到会话开头 / 末尾。tmux 的 copy mode(键位见上面的速查)在全屏 TUI 窗格里翻不出有意义的东西,它的用武之地是 shell 窗格。
 
 **3. 复制粘贴要打通系统剪贴板。** tmux 默认 `set-clipboard external`:只转发程序发出的 OSC52,tmux 自己复制的内容(copy mode 选中、鼠标拖选)只进 tmux 内部缓冲,`⌘V` 粘不到。改成:
 
@@ -157,7 +195,7 @@ bind r source-file ~/.config/tmux/tmux.conf \; display "reloaded"
 
 一个边界要知道:tmux server 是普通进程,**本机重启就没了**。想跨重启恢复有 tmux-resurrect 这类插件,我没装——tmux 的主战场本来就是 SSH 到长开机的服务器跑长任务;本机 Mac 睡眠唤醒没问题,关机重启的场景交给 `opencode -c` 就够。
 
-还有两个一句话的小点:本机 tmux 里 SSH 到服务器又起了 tmux(套娃),要操作内层得按两遍 `C-b C-b`;想一次清掉所有会话,`tmux kill-server`。
+还有一个一句话的小点:本机 tmux 里 SSH 到服务器又起了 tmux(套娃),要操作内层得按两遍 `C-b C-b`。
 
 ## 链接
 
